@@ -1,3 +1,9 @@
+library("network")
+library("sna")
+library("igraph")
+library("beepr")
+library("plotrix")
+
 N=50
 E=1
 pn=0.7
@@ -10,8 +16,8 @@ tthre=0.05 # trait similarity threshold
 
 curve(1/N + E*(pn*x*(1+r)/N + pr), from=1,to=10)
 
-init.empty=rep(0,N*N)
-init=sample(0:1,N*N,replace=T,prob=c(0.95,0.05))
+init.empty=rep(0,N*N) # start from empty matrix
+init=sample(0:1,N*N,replace=T,prob=c(0.95,0.05)) # start from random graph
 init=init.empty
 initm=matrix(init, ncol=N,nrow=N)
 diag(initm)=1
@@ -26,7 +32,7 @@ cug.test(initn,gtrans,cmode="edges",mode="graph")
 relat=runif(N*N,0,0.5)
 # generating trait values
 #### MAKE CONTINUOUS TRAIT
-#trait=1:N
+#trait=1:N # nominal trait
 trait=runif(N,0.1)
 m=initm
 cc=rep(0,n)
@@ -80,7 +86,7 @@ for (i in 1:n){
 #     #m[k,j]=connect
 #   }
   dead=sample(1:(N+1),1)
-  #degree.of.dead[i]=rowSums(m)[dead]
+  degree.of.dead[i]=rowSums(m)[dead]
   m=m[-dead,-dead]
   trait=trait[-dead]
   #E=E-0.00005
