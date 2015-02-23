@@ -14,7 +14,7 @@ born.to.central=0 # Do more central mothers have more newborns?
 mr=25 # mutation rate
 tthre=0.05 # trait similarity threshold
 
-curve(1/N + E*(pn*x*(1+r)/N + pr), from=1,to=10)
+#curve(1/N + E*(pn*x*(1+r)/N + pr), from=1,to=10)
 
 init.empty=rep(0,N*N) # start from empty matrix
 init=sample(0:1,N*N,replace=T,prob=c(0.95,0.05)) # start from random graph
