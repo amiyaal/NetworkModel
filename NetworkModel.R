@@ -9,44 +9,22 @@ E=1 # environmental factor. Will make ties more likely if higher
 pn=0.7 # probability to connect to friend of mother
 pr=0.01 # probability to connect to random individual
 r=0.5
-n=5000 #simulation iterations
+n=1000 #simulation iterations
 born.to.central=0 # Do more central mothers have more newborns?
 mr=25 # mutation rate is 1/mr
 tthre=0.05 # trait similarity threshold. More likely to connect if difference between trait values are below this threshold
 tbased = 0 # should connection be based on trait similarity
+init.ties=0.4 # density of initial network
 
-# Initializing
-init.empty=rep(0,N*N) # start from empty matrix
-init=sample(0:1,N*N,replace=T,prob=c(0.95,0.05)) # start from random graph
-init=init.empty
-initm=matrix(init, ncol=N,nrow=N)
-diag(initm)=1
-
-initn=network(initm,directed=F)
-plot(initn,displayisolates=T)
-network.density(initn)
-gtrans(initn,mode="graph")
-cug.test(initn,gtrans,cmode="edges",mode="graph")
-
-# random relatedness matrix
-relat=runif(N*N,0,0.5)
-# generating trait values
-#### MAKE CONTINUOUS TRAIT
-#trait=1:N # nominal trait
-trait=runif(N,0.1) # vector of random initial trait values
-m=initm
-cc=rep(0,n) # will record clustering coefficient every generation
-density=rep(0,n) # will record network density
-degree.of.dead=rep(0,n) # will record the degree of the dead individual
-traits=rep(0,n) 
-assort=rep(0,n) # will record trait assortativity
-
-simulate = function(n, N, trait, mr, pn, pr, tbased){
+simulate = function(n, N, mr, pn, pr, tbased, init.ties){
   # Initializing
-  init.empty=rep(0,N*N) # start from empty matrix
-  init=sample(0:1,N*N,replace=T,prob=c(0.95,0.05)) # start from random graph
-  init=init.empty
+  init=sample(0:1,N*N,replace=T,prob=c(1-init.ties,init.ties)) # start from random graph
   m=matrix(init, ncol=N,nrow=N)
+  trait=runif(N) # vector of random initial trait values
+  cc=rep(0,n) # will record clustering coefficient every generation
+  density=rep(0,n) # will record network density
+  degree.of.dead=rep(0,n) # will record the degree of the dead individual
+  assort=rep(0,n) # will record trait assortativity
   for (i in 1:n){
     if (born.to.central == 0) mother=sample(1:N,1)
     else mother=sample(1:N,1,prob=rowSums(m))
@@ -74,7 +52,7 @@ simulate = function(n, N, trait, mr, pn, pr, tbased){
         fc.prob=E*pn
         tbased=E*pr
       }
-      if (tbased == 0){
+      if (tbased == pr){
         if (m[mother,j]==1) connect=sample(0:1,1,prob=c(1-fc.prob,fc.prob))
         else connect=sample(0:1,1,prob=c(1-rc.prob,rc.prob))
       }
@@ -105,13 +83,14 @@ simulate = function(n, N, trait, mr, pn, pr, tbased){
     #traits[i]=trait[mother]
     igraph=graph.adjacency(m,mode="undirected")
     assort[i]=assortativity(igraph,trait,directed=F)
+    if (is.nan(assort[i])==T) assort[i]=0
   }
   res = list(m=m,newnet=newnet,trait=trait,degree.of.dead=degree.of.dead,cc=cc,density=density
              ,assort=assort)
   res
 }
 
-res=simulate(n, N, trait, mr, pn, pr, tbased)
+res=simulate(n, N, mr, pn, pr, tbased, init.ties)
 beep()
 
 mean(res["degree.of.dead"][[1]])
@@ -122,6 +101,40 @@ mean(res["assort"][[1]])
 # Continuous trait coloring
 cols=color.scale(res["trait"][[1]],cs1=1)
 plot(res["newnet"][[1]],displayisolates=T,vertex.col=cols,edge.col="black",vertex.border="black")
+
+par(xpd=T)
+plot(res["cc"][[1]],type="l",col="blue", ylim=c(min(res["density"][[1]],res["cc"][[1]],res["assort"][[1]]),1),xlab="Time",ylab="")
+lines(res["density"][[1]],col="red")
+lines(res["assort"][[1]],col="green")
+legend ("top",inset=c(0,-0.275),c("Density","Clustering coeficient","Assortativty"),lty=c(1,1,1),lwd=c(2.5,2.5,2.5),col=c("red","blue","green"))
+
+
+
+# Initializing
+init.empty=rep(0,N*N) # start from empty matrix
+init=sample(0:1,N*N,replace=T,prob=c(0.95,0.05)) # start from random graph
+init=init.empty
+initm=matrix(init, ncol=N,nrow=N)
+diag(initm)=1
+
+initn=network(initm,directed=F)
+plot(initn,displayisolates=T)
+network.density(initn)
+gtrans(initn,mode="graph")
+cug.test(initn,gtrans,cmode="edges",mode="graph")
+
+# random relatedness matrix
+relat=runif(N*N,0,0.5)
+# generating trait values
+#trait=1:N # nominal trait
+trait=runif(N,0.1) # vector of random initial trait values
+m=initm
+cc=rep(0,n) # will record clustering coefficient every generation
+density=rep(0,n) # will record network density
+degree.of.dead=rep(0,n) # will record the degree of the dead individual
+traits=rep(0,n) 
+assort=rep(0,n) # will record trait assortativity
+
 
 # mean(degree.of.dead)
 # mean(density)
