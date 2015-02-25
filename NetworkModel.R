@@ -14,7 +14,7 @@ born.to.central=0 # Do more central mothers have more newborns?
 mr=25 # mutation rate is 1/mr
 tthre=0.05 # trait similarity threshold. More likely to connect if difference between trait values are below this threshold
 tbased = 0 # should connection be based on trait similarity
-init.ties=0.4 # density of initial network
+init.ties=0.1 # density of initial network
 
 simulate = function(n, N, mr, pn, pr, tbased, init.ties){
   # Initializing
@@ -92,6 +92,18 @@ simulate = function(n, N, mr, pn, pr, tbased, init.ties){
 
 res=simulate(n, N, mr, pn, pr, tbased, init.ties)
 beep()
+
+b=0.01
+res.arr=array(list(),c(10,10,100))
+res.arr[1,1,1]=list(res)
+for (a in seq(from=0,to=0.9,by=0.1)){
+#  for (b in seq(from=0,to=0.9,by=0.1)){
+    for (iter in 1:100){
+      res = simulate(n, N, mr, a, b, tbased, init.ties)
+      res.arr[a,b,iter]=res
+    }
+#  }
+}
 
 mean(res["degree.of.dead"][[1]])
 mean(res["density"][[1]])
