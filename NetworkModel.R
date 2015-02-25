@@ -95,15 +95,45 @@ beep()
 
 b=0.01
 res.arr=array(list(),c(10,10,100))
-res.arr[1,1,1]=list(res)
-for (a in seq(from=0,to=0.9,by=0.1)){
+for (a in 1:10){
 #  for (b in seq(from=0,to=0.9,by=0.1)){
     for (iter in 1:100){
-      res = simulate(n, N, mr, a, b, tbased, init.ties)
-      res.arr[a,b,iter]=res
+      cat(sprintf("%d %d\n", a, iter))
+      res = simulate(n, N, mr, (a/10)-0.1, b, tbased, init.ties)
+      res.arr[[a]][[1]][[iter]]=res
     }
 #  }
 }
+
+save(res.arr,file="resarr.RData")
+
+par(xpd=F)
+res01den=array(0,c(10,10,100))
+for (a in 1:10){
+  for (iter in 1:100){
+    res01den[a,1,iter]=mean(res.arr[[a]][[1]][[iter]]["density"][[1]])
+  }
+}
+boxplot(t(res01den[1:10,1,1:100]),main="Density",xaxt="n",xlab="pn")
+axis(1,at=1:10,labels=seq(from=0,to=0.9,by=0.1))
+
+res01cc=array(0,c(10,10,100))
+for (a in 1:10){
+  for (iter in 1:100){
+    res01cc[a,1,iter]=mean(res.arr[[a]][[1]][[iter]]["cc"][[1]])
+  }
+}
+boxplot(t(res01cc[1:10,1,1:100]),main="CC",xaxt="n",xlab="pn")
+axis(1,at=1:10,labels=seq(from=0,to=0.9,by=0.1))
+
+res01assort=array(0,c(10,10,100))
+for (a in 1:10){
+  for (iter in 1:100){
+    res01assort[a,1,iter]=mean(res.arr[[a]][[1]][[iter]]["assort"][[1]])
+  }
+}
+boxplot(t(res01assort[1:10,1,1:100]),main="Assortativity",xaxt="n",xlab="pn")
+axis(1,at=1:10,labels=seq(from=0,to=0.9,by=0.1))
 
 mean(res["degree.of.dead"][[1]])
 mean(res["density"][[1]])
