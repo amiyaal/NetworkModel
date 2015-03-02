@@ -42,16 +42,16 @@ simulate = function(n, N, mr, pn, pr, tbased, init.ties){
     } 
     for (j in 1:N){ # connecting the newborn
       if (j==mother) next
-      if(trait[mother]-trait[j]==tthre) { 
-        rc.prob=sqrt(E*pr) #random connection increases when sharing traits
-        fc.prob=sqrt(E*pn) #connections to mother's friends increase with sharing traits
-        tbased=E*pn
-      }
-      else {
+#       if(trait[mother]-trait[j]==tthre) { 
+#         rc.prob=sqrt(E*pr) #random connection increases when sharing traits
+#         fc.prob=sqrt(E*pn) #connections to mother's friends increase with sharing traits
+#         tbased=E*pn
+#       }
+#       else {
         rc.prob=E*pr
         fc.prob=E*pn
         tbased=E*pr
-      }
+#       }
       if (tbased == pr){
         if (m[mother,j]==1) connect=sample(0:1,1,prob=c(1-fc.prob,fc.prob))
         else connect=sample(0:1,1,prob=c(1-rc.prob,rc.prob))
@@ -93,56 +93,67 @@ simulate = function(n, N, mr, pn, pr, tbased, init.ties){
 res=simulate(n, N, mr, pn, pr, tbased, init.ties)
 beep()
 
-b=0.01
-res.arr=array(list(),c(10,10,100))
+b=0.316
+# Values for b (add 0 and remove 1):
+10^-(seq(0,2,by=0.25))
+res.arr7=array(list(),c(10,10,100))
+TRY: array(list(NULL), c(10,100))
 for (a in 1:10){
 #  for (b in seq(from=0,to=0.9,by=0.1)){
     for (iter in 1:100){
       cat(sprintf("%d %d\n", a, iter))
       res = simulate(n, N, mr, (a/10)-0.1, b, tbased, init.ties)
-      res.arr[[a]][[1]][[iter]]=res
+      res.arr7[[a]][[1]][[iter]]=res
     }
 #  }
 }
 
-save(res.arr,file="resarr.RData")
+save(res.arr7,file="resarr7.RData")
 
 par(xpd=F)
-res01den=array(0,c(10,10,100))
+res056den=array(0,c(10,10,100))
 for (a in 1:10){
   for (iter in 1:100){
-    res01den[a,1,iter]=mean(res.arr[[a]][[1]][[iter]]["density"][[1]])
+    res056den[a,1,iter]=mean(res.arr4[[a]][[1]][[iter]]["density"][[1]])
   }
 }
-boxplot(t(res01den[1:10,1,1:100]),main="Density",xaxt="n",xlab="pn")
+boxplot(t(res056den[1:10,1,1:100]),main="Density",xaxt="n",xlab="pn")
 axis(1,at=1:10,labels=seq(from=0,to=0.9,by=0.1))
 
-res01cc=array(0,c(10,10,100))
+res056cc=array(0,c(10,10,100))
 for (a in 1:10){
   for (iter in 1:100){
-    res01cc[a,1,iter]=mean(res.arr[[a]][[1]][[iter]]["cc"][[1]])
+    res056cc[a,1,iter]=mean(res.arr4[[a]][[1]][[iter]]["cc"][[1]])
   }
 }
-boxplot(t(res01cc[1:10,1,1:100]),main="CC",xaxt="n",xlab="pn")
+boxplot(t(res056cc[1:10,1,1:100]),main="CC",xaxt="n",xlab="pn")
 axis(1,at=1:10,labels=seq(from=0,to=0.9,by=0.1))
 
-res01assort=array(0,c(10,10,100))
+res056assort=array(0,c(10,10,100))
 for (a in 1:10){
   for (iter in 1:100){
-    res01assort[a,1,iter]=mean(res.arr[[a]][[1]][[iter]]["assort"][[1]])
+    res056assort[a,1,iter]=mean(res.arr4[[a]][[1]][[iter]]["assort"][[1]])
   }
 }
-boxplot(t(res01assort[1:10,1,1:100]),main="Assortativity",xaxt="n",xlab="pn")
+boxplot(t(res056assort[1:10,1,1:100]),main="Assortativity",xaxt="n",xlab="pn")
 axis(1,at=1:10,labels=seq(from=0,to=0.9,by=0.1))
 
-mean(res["degree.of.dead"][[1]])
-mean(res["density"][[1]])
-mean(res["cc"][[1]])
-mean(res["assort"][[1]])
+
+# Autocorrelation
+ac=acf(res.arr[[10]][[1]][[1]]["assort"][[1]],lag.max=100)
 
 # Continuous trait coloring
-cols=color.scale(res["trait"][[1]],cs1=1)
-plot(res["newnet"][[1]],displayisolates=T,vertex.col=cols,edge.col="black",vertex.border="black")
+cols=color.scale(res.arr[[1]][[1]][[1]]["trait"][[1]],cs1=1)
+t=res.arr[[1]][[1]][[5]]["trait"][[1]]
+cols = rainbow(length(t))[rank(t)]
+plot(res.arr[[1]][[1]][[5]]["newnet"][[1]],displayisolates=T,vertex.col=cols,edge.col="black",vertex.border="black")
+
+par(mfrow=c(3,4),mar=c(1,1,1,1))
+for (i in 1:10){
+  t=res.arr4[[i]][[1]][[1]]["trait"][[1]]
+  cols = rainbow(length(t))[rank(t)]
+  plot(res.arr4[[i]][[1]][[1]]["newnet"][[1]],displayisolates=T,vertex.col=cols,edge.col="black",vertex.border="black",vertex.cex=2)  
+}
 
 par(xpd=T)
 plot(res["cc"][[1]],type="l",col="blue", ylim=c(min(res["density"][[1]],res["cc"][[1]],res["assort"][[1]]),1),xlab="Time",ylab="")
@@ -150,6 +161,10 @@ lines(res["density"][[1]],col="red")
 lines(res["assort"][[1]],col="green")
 legend ("top",inset=c(0,-0.275),c("Density","Clustering coeficient","Assortativty"),lty=c(1,1,1),lwd=c(2.5,2.5,2.5),col=c("red","blue","green"))
 
+mean(res["degree.of.dead"][[1]])
+mean(res["density"][[1]])
+mean(res["cc"][[1]])
+mean(res["assort"][[1]])
 
 
 # Initializing
