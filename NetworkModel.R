@@ -93,49 +93,80 @@ simulate = function(n, N, mr, pn, pr, tbased, init.ties){
 res=simulate(n, N, mr, pn, pr, tbased, init.ties)
 beep()
 
-b=0.316
+b=0
 # Values for b (add 0 and remove 1):
 10^-(seq(0,2,by=0.25))
-res.arr7=array(list(),c(10,10,100))
+res.arr0=array(list(),c(10,10,100))
 TRY: array(list(NULL), c(10,100))
 for (a in 1:10){
 #  for (b in seq(from=0,to=0.9,by=0.1)){
     for (iter in 1:100){
       cat(sprintf("%d %d\n", a, iter))
       res = simulate(n, N, mr, (a/10)-0.1, b, tbased, init.ties)
-      res.arr7[[a]][[1]][[iter]]=res
+      res.arr0[[a]][[1]][[iter]]=res
     }
 #  }
 }
 
-save(res.arr7,file="resarr7.RData")
+save(res.arr0,file="resarr0.RData")
+
+#====================================================================
+# summarizing results
+den=array(0,c(10,10))
+cc=array(0,c(10,10))
+assort=array(0,c(10,10))
+for (i in 0:9){
+  name=load(paste0("~/Dropbox/Erol/NetworkModel/resarr",i,".RData"))
+  res=eval(parse(text=name))
+  for (j in 1:10){
+    den1=0
+    cc1=0
+    assort1=0
+    for (iter in 1:100){
+      den1=den1+mean(res[[j]][[1]][[iter]]["density"][[1]])
+      cc1=cc1+mean(res[[j]][[1]][[iter]]["cc"][[1]])
+      assort1=assort1+mean(res[[j]][[1]][[iter]]["assort"][[1]])
+    }
+      den[i+1,j]=den1/100
+      cc[i+1,j]=cc1/100
+      assort[i+1,j]=assort1/100
+    }
+}
+rm(res)
+library("gplots")
+colfunc <- colorRampPalette(c("black", "red"))
+heatmap.2(den,Rowv=F,Colv=F,dendogram="none",trace="none",col=colfunc(15))
+heatmap.2(cc,Rowv=F,Colv=F,dendogram="none",trace="none",col=colfunc(15))
+heatmap.2(assort,Rowv=F,Colv=F,dendogram="none",trace="none",col=colfunc(15))
+library(rgl)
+persp3d(1:10, 1:10, den, col="skyblue")
 
 par(xpd=F)
-res056den=array(0,c(10,10,100))
+res0den=array(0,c(10,10,100))
 for (a in 1:10){
   for (iter in 1:100){
-    res056den[a,1,iter]=mean(res.arr4[[a]][[1]][[iter]]["density"][[1]])
+    res1den[a,1,iter]=mean(res.arr9[[a]][[1]][[iter]]["density"][[1]])
   }
 }
-boxplot(t(res056den[1:10,1,1:100]),main="Density",xaxt="n",xlab="pn")
+boxplot(t(res1den[1:10,1,1:100]),main="Density",xaxt="n",xlab="pn")
 axis(1,at=1:10,labels=seq(from=0,to=0.9,by=0.1))
 
-res056cc=array(0,c(10,10,100))
+res0cc=array(0,c(10,10,100))
 for (a in 1:10){
   for (iter in 1:100){
-    res056cc[a,1,iter]=mean(res.arr4[[a]][[1]][[iter]]["cc"][[1]])
+    res0cc[a,1,iter]=mean(res.arr0[[a]][[1]][[iter]]["cc"][[1]])
   }
 }
-boxplot(t(res056cc[1:10,1,1:100]),main="CC",xaxt="n",xlab="pn")
+boxplot(t(res0cc[1:10,1,1:100]),main="CC",xaxt="n",xlab="pn")
 axis(1,at=1:10,labels=seq(from=0,to=0.9,by=0.1))
 
-res056assort=array(0,c(10,10,100))
+res0assort=array(0,c(10,10,100))
 for (a in 1:10){
   for (iter in 1:100){
-    res056assort[a,1,iter]=mean(res.arr4[[a]][[1]][[iter]]["assort"][[1]])
+    res0assort[a,1,iter]=mean(res.arr0[[a]][[1]][[iter]]["assort"][[1]])
   }
 }
-boxplot(t(res056assort[1:10,1,1:100]),main="Assortativity",xaxt="n",xlab="pn")
+boxplot(t(res0assort[1:10,1,1:100]),main="Assortativity",xaxt="n",xlab="pn")
 axis(1,at=1:10,labels=seq(from=0,to=0.9,by=0.1))
 
 
@@ -150,11 +181,12 @@ plot(res.arr[[1]][[1]][[5]]["newnet"][[1]],displayisolates=T,vertex.col=cols,edg
 
 par(mfrow=c(3,4),mar=c(1,1,1,1))
 for (i in 1:10){
-  t=res.arr4[[i]][[1]][[1]]["trait"][[1]]
+  t=res.arr0[[i]][[1]][[1]]["trait"][[1]]
   cols = rainbow(length(t))[rank(t)]
-  plot(res.arr4[[i]][[1]][[1]]["newnet"][[1]],displayisolates=T,vertex.col=cols,edge.col="black",vertex.border="black",vertex.cex=2)  
+  plot(res.arr0[[i]][[1]][[1]]["newnet"][[1]],displayisolates=T,vertex.col=cols,edge.col="black",vertex.border="black",vertex.cex=2)  
 }
 
+#====================================================================
 par(xpd=T)
 plot(res["cc"][[1]],type="l",col="blue", ylim=c(min(res["density"][[1]],res["cc"][[1]],res["assort"][[1]]),1),xlab="Time",ylab="")
 lines(res["density"][[1]],col="red")
