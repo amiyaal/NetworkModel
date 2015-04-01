@@ -95,7 +95,8 @@ beep()
 
 b=0
 # Values for b (add 0 and remove 1):
-10^-(seq(0,2,by=0.25))
+prseq=(c(10^-(seq(0,2,by=0.25)),0))
+prseq=round(prseq[order(prseq)],digits=3)
 res.arr0=array(list(),c(10,10,100))
 TRY: array(list(NULL), c(10,100))
 for (a in 1:10){
@@ -133,13 +134,65 @@ for (i in 0:9){
     }
 }
 rm(res)
+
+# Degree Distribution
+mean.deg=array(0,c(10,10))
+sd.deg=array(0,c(10,10))
+kurt=array(0,c(10,10))
+skew=array(0,c(10,10))
+for (i in 0:9){
+  name=load(paste0("~/Dropbox/Erol/NetworkModel/resarr",i,".RData"))
+  res=eval(parse(text=name))
+  for (j in 1:10){
+    skew1=0
+    kurt1=0
+    mean.deg1=0
+    sd1=0
+    for (iter in 1:100){
+      net=res[[j]][[1]][[iter]]["newnet"][[1]]
+      deg=sna::degree(net,gmode="graph")
+      mean.deg1=mean.deg1+mean(deg)
+      sd1=sd1+sd(deg)
+      skew1=skew1+skewness(deg)
+      kurt1=kurt1+kurtosis(deg)
+    }
+    mean.deg[i+1,j]=mean.deg1/100
+    sd.deg[i+1,j]=sd1/100
+    kurt[i+1,j]=kurt1/100
+    skew[i+1,j]=skew1/100
+  }
+  rm(list=ls(pattern="res.arr"))
+}
+
+
 library("gplots")
 colfunc <- colorRampPalette(c("black", "red"))
-heatmap.2(den,Rowv=F,Colv=F,dendogram="none",trace="none",col=colfunc(15))
-heatmap.2(cc,Rowv=F,Colv=F,dendogram="none",trace="none",col=colfunc(15))
-heatmap.2(assort,Rowv=F,Colv=F,dendogram="none",trace="none",col=colfunc(15))
+heatmap.2(den,Rowv=F,Colv=F,trace="none",col=colfunc(15),ylab="Pr",main="Density",
+          labCol=seq(from=0,to=0.9,by=0.1),labRow=prseq,xlab="Pn")
+heatmap.2(cc,Rowv=F,Colv=F,trace="none",col=colfunc(15),ylab="Pr",main="CC",
+          labCol=seq(from=0,to=0.9,by=0.1),labRow=prseq,xlab="Pn")
+heatmap.2(assort,Rowv=F,Colv=F,trace="none",col=colfunc(15),ylab="Pr",main="Assortativity",
+          labCol=seq(from=0,to=0.9,by=0.1),labRow=prseq,xlab="Pn")
+
+heatmap.2(mean.deg,Rowv=F,Colv=F,trace="none",col=colfunc(15),ylab="Pr",main="Degree Mean",
+          labCol=seq(from=0,to=0.9,by=0.1),labRow=prseq,xlab="Pn")
+heatmap.2(sd.deg,Rowv=F,Colv=F,trace="none",col=colfunc(15),ylab="Pr",main="Degree SD",
+          labCol=seq(from=0,to=0.9,by=0.1),labRow=prseq,xlab="Pn")
+heatmap.2(kurt,Rowv=F,Colv=F,trace="none",col=colfunc(15),ylab="Pr",main="Kurtosis",
+          labCol=seq(from=0,to=0.9,by=0.1),labRow=prseq,xlab="Pn")
+heatmap.2(skew,Rowv=F,Colv=F,trace="none",col=colfunc(15),ylab="Pr",main="Skewness",
+          labCol=seq(from=0,to=0.9,by=0.1),labRow=prseq,xlab="Pn")
+
+
+filled.contour(sd.deg,color.palette=topo.colors,x=seq(from=0,to=0.9,by=0.1),y=prseq,
+               ylab="Pn",xlab="Pr")
+#col.l <- colorRampPalette(c('white', 'black'))
+#levelplot(cc,col.regions=col.l)
+# 3D
 library(rgl)
-persp3d(1:10, 1:10, den, col="skyblue")
+persp3d(x=seq(from=0,to=0.9,by=0.1), y=prseq, den, col="skyblue")
+persp3d(x=seq(from=0,to=0.9,by=0.1), y=prseq, cc, col="blue")
+persp3d(x=seq(from=0,to=0.9,by=0.1), y=prseq, assort, col="blue")
 
 par(xpd=F)
 res0den=array(0,c(10,10,100))
