@@ -3,6 +3,7 @@ library("sna")
 library("igraph")
 library("beepr")
 library("plotrix")
+library("Matrix")
 
 N=50 # number of individuals
 E=1 # environmental factor. Will make ties more likely if higher
@@ -16,19 +17,28 @@ tthre=0.05 # trait similarity threshold. More likely to connect if difference be
 tbased = 0 # should connection be based on trait similarity
 init.ties=0.1 # density of initial network
 
-simulate = function(n, N, mr, pn, pr, tbased, init.ties){
+simulate = function(n, N, mr, pn, pr, tbased, init.ties, kill.method=1){
   # Initializing
   init=sample(0:1,N*N,replace=T,prob=c(1-init.ties,init.ties)) # start from random graph
   m=matrix(init, ncol=N,nrow=N)
+  m=forceSymmetric(m)
   trait=runif(N) # vector of random initial trait values
   cc=rep(0,n) # will record clustering coefficient every generation
   density=rep(0,n) # will record network density
   degree.of.dead=rep(0,n) # will record the degree of the dead individual
   assort=rep(0,n) # will record trait assortativity
+  rc.prob=E*pr
+  fc.prob=E*pn
+  tbased=E*pr
   for (i in 1:n){
     if (born.to.central == 0) mother=sample(1:N,1)
     else mother=sample(1:N,1,prob=rowSums(m))
-    vec=rep(0,N+1)
+    vecpn=m[,mother]*sample(0:1,N,prob=c(1-fc.prob,fc.prob),replace=T)
+    vecpr=(1-m[,mother])*sample(0:1,N,prob=c(1-rc.prob,rc.prob),replace=T)
+    vec=vecpn+vecpr
+    vec[vec==2]=1
+    vec=c(vec,1)
+    #vec=rep(0,N+1)
     m=cbind(m,vec)
     m=rbind(m,vec)
     m[mother,N+1]=1
@@ -40,27 +50,25 @@ simulate = function(n, N, mr, pn, pr, tbased, init.ties){
       if (trait[N+1]>1) trait[N+1]=trait[N+1]-1 # making a torus
       if (trait[N+1]<0) trait[N+1]=1+trait[N+1]
     } 
-    for (j in 1:N){ # connecting the newborn
-      if (j==mother) next
-#       if(trait[mother]-trait[j]==tthre) { 
-#         rc.prob=sqrt(E*pr) #random connection increases when sharing traits
-#         fc.prob=sqrt(E*pn) #connections to mother's friends increase with sharing traits
-#         tbased=E*pn
-#       }
-#       else {
-        rc.prob=E*pr
-        fc.prob=E*pn
-        tbased=E*pr
-#       }
-      if (tbased == pr){
-        if (m[mother,j]==1) connect=sample(0:1,1,prob=c(1-fc.prob,fc.prob))
-        else connect=sample(0:1,1,prob=c(1-rc.prob,rc.prob))
-      }
-      else connect=sample(0:1,1,prob=c(1-tbased,tbased))
-      m[j,N+1]=connect
-      m[N+1,j]=connect
-      m[N+1,N+1]=1
-    }
+#    for (j in 1:N){ # connecting the newborn
+ #     if (j==mother) next
+      #       if(trait[mother]-trait[j]==tthre) { 
+      #         rc.prob=sqrt(E*pr) #random connection increases when sharing traits
+      #         fc.prob=sqrt(E*pn) #connections to mother's friends increase with sharing traits
+      #         tbased=E*pn
+      #       }
+      #       else {
+      
+      #       }
+#      if (tbased == pr){
+ #       if (m[mother,j]==1) connect=sample(0:1,1,prob=c(1-fc.prob,fc.prob))
+  #      else connect=sample(0:1,1,prob=c(1-rc.prob,rc.prob))
+  #    }
+  #    else connect=sample(0:1,1,prob=c(1-tbased,tbased))
+  #    m[j,N+1]=connect
+  #    m[N+1,j]=connect
+  #    m[N+1,N+1]=1
+  #  }
     #  j=sample(1:N,1) #modifying connections among existing individuals
     #  k=sample(1:N,1)
     # connect according to correlation in friends
@@ -71,45 +79,48 @@ simulate = function(n, N, mr, pn, pr, tbased, init.ties){
     #     #m[j,k]=connect
     #     #m[k,j]=connect
     #   }
-    dead=sample(1:(N+1),1) # choosing who to kill
-    degree.of.dead[i]=rowSums(m)[dead]
+    if (kill.method==1) dead=sample(1:(N+1),1) # choosing who to kill randomly
+    else dead=sample(1:(N+1),1,prob=1/(sqrt(rowSums(m))+1)) # Higher degree -> less chance to die
+    #degree.of.dead[i]=rowSums(m)[dead]
     m=m[-dead,-dead]
     trait=trait[-dead]
     #E=E-0.00005
-    newnet=network(m,directed=F)
+    #newnet=network(m,directed=F)
     #if (n %% 1000 == 0) plot(newnet,displayisolates=T,edge.col="black",vertex.border="black")
-    cc[i]=gtrans(newnet,mode="graph")
-    density[i]=network.density(newnet)
+    #cc[i]=gtrans(newnet,mode="graph")
+    #density[i]=network.density(newnet)
     #traits[i]=trait[mother]
     igraph=graph.adjacency(m,mode="undirected")
+    density[i]=graph.density(igraph)
+    cc[i]=transitivity(igraph,type="global")
     assort[i]=assortativity(igraph,trait,directed=F)
     if (is.nan(assort[i])==T) assort[i]=0
   }
-  res = list(m=m,newnet=newnet,trait=trait,degree.of.dead=degree.of.dead,cc=cc,density=density
+  res = list(m=m,trait=trait,degree.of.dead=degree.of.dead,cc=cc,density=density
              ,assort=assort)
   res
 }
 
-res=simulate(n, N, mr, pn, pr, tbased, init.ties)
+res=simulate(n, N, mr, pn, pr, tbased, init.ties, 2)
 beep()
 
-b=0
+b=0.032
 # Values for b (add 0 and remove 1):
 prseq=(c(10^-(seq(0,2,by=0.25)),0))
 prseq=round(prseq[order(prseq)],digits=3)
-res.arr0=array(list(),c(10,10,100))
+res.arr.k3=array(list(),c(10,10,100))
 TRY: array(list(NULL), c(10,100))
 for (a in 1:10){
 #  for (b in seq(from=0,to=0.9,by=0.1)){
     for (iter in 1:100){
       cat(sprintf("%d %d\n", a, iter))
-      res = simulate(n, N, mr, (a/10)-0.1, b, tbased, init.ties)
-      res.arr0[[a]][[1]][[iter]]=res
+      res = simulate(n, N, mr, (a/10)-0.1, b, tbased, init.ties,kill.method=2)
+      res.arr.k3[[a]][[1]][[iter]]=res
     }
 #  }
 }
 
-save(res.arr0,file="resarr0.RData")
+save(res.arr.k3,file="resarrk3.RData")
 
 #====================================================================
 # summarizing results
@@ -164,7 +175,7 @@ for (i in 0:9){
   rm(list=ls(pattern="res.arr"))
 }
 
-
+cov=sd.deg/mean.deg # Coefficient of variation
 library("gplots")
 colfunc <- colorRampPalette(c("black", "red"))
 heatmap.2(den,Rowv=F,Colv=F,trace="none",col=colfunc(15),ylab="Pr",main="Density",
@@ -177,6 +188,8 @@ heatmap.2(assort,Rowv=F,Colv=F,trace="none",col=colfunc(15),ylab="Pr",main="Asso
 heatmap.2(mean.deg,Rowv=F,Colv=F,trace="none",col=colfunc(15),ylab="Pr",main="Degree Mean",
           labCol=seq(from=0,to=0.9,by=0.1),labRow=prseq,xlab="Pn")
 heatmap.2(sd.deg,Rowv=F,Colv=F,trace="none",col=colfunc(15),ylab="Pr",main="Degree SD",
+          labCol=seq(from=0,to=0.9,by=0.1),labRow=prseq,xlab="Pn")
+heatmap.2(cov,Rowv=F,Colv=F,trace="none",col=colfunc(15),ylab="Pr",main="Coefficient of Variation",
           labCol=seq(from=0,to=0.9,by=0.1),labRow=prseq,xlab="Pn")
 heatmap.2(kurt,Rowv=F,Colv=F,trace="none",col=colfunc(15),ylab="Pr",main="Kurtosis",
           labCol=seq(from=0,to=0.9,by=0.1),labRow=prseq,xlab="Pn")
@@ -195,10 +208,10 @@ persp3d(x=seq(from=0,to=0.9,by=0.1), y=prseq, cc, col="blue")
 persp3d(x=seq(from=0,to=0.9,by=0.1), y=prseq, assort, col="blue")
 
 par(xpd=F)
-res0den=array(0,c(10,10,100))
+res1den=array(0,c(10,10,100))
 for (a in 1:10){
   for (iter in 1:100){
-    res1den[a,1,iter]=mean(res.arr9[[a]][[1]][[iter]]["density"][[1]])
+    res1den[a,1,iter]=mean(res.arr.k3[[a]][[1]][[iter]]["density"][[1]])
   }
 }
 boxplot(t(res1den[1:10,1,1:100]),main="Density",xaxt="n",xlab="pn")
@@ -230,7 +243,7 @@ ac=acf(res.arr[[10]][[1]][[1]]["assort"][[1]],lag.max=100)
 cols=color.scale(res.arr[[1]][[1]][[1]]["trait"][[1]],cs1=1)
 t=res.arr[[1]][[1]][[5]]["trait"][[1]]
 cols = rainbow(length(t))[rank(t)]
-plot(res.arr[[1]][[1]][[5]]["newnet"][[1]],displayisolates=T,vertex.col=cols,edge.col="black",vertex.border="black")
+plot(res.arr.k2[[5]][[1]][[5]]["newnet"][[1]],displayisolates=T,vertex.col=cols,edge.col="black",vertex.border="black")
 
 par(mfrow=c(3,4),mar=c(1,1,1,1))
 for (i in 1:10){
