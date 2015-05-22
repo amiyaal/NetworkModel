@@ -5,6 +5,32 @@ library("beepr")
 library("plotrix")
 library("Matrix")
 
+code <- '
+#include <Rcpp.h>
+// [[Rcpp::export]]
+int test()
+{
+ Rprintf("It worked!");
+ return 0;
+}
+'
+sourceCpp(code=code)
+invisible(test())
+
+code3 <- '
+#include <numeric>
+#include <Rcpp.h>
+using namespace Rcpp;
+
+// [[Rcpp::export]]
+double sum4(NumericVector x) {
+  return std::accumulate(x.begin(), x.end(), 0.0);
+}
+'
+sourceCpp(code=code3)
+invisible(test())
+
+
 N=50 # number of individuals
 E=1 # environmental factor. Will make ties more likely if higher
 pn=0.7 # probability to connect to friend of mother
@@ -21,7 +47,7 @@ simulate = function(n, N, mr, pn, pr, tbased, init.ties, kill.method=1){
   # Initializing
   init=sample(0:1,N*N,replace=T,prob=c(1-init.ties,init.ties)) # start from random graph
   m=matrix(init, ncol=N,nrow=N)
-  m=forceSymmetric(m)
+  m=matrix(forceSymmetric(m),ncol=N,nrow=N)
   trait=runif(N) # vector of random initial trait values
   cc=rep(0,n) # will record clustering coefficient every generation
   density=rep(0,n) # will record network density
@@ -104,18 +130,18 @@ simulate = function(n, N, mr, pn, pr, tbased, init.ties, kill.method=1){
 res=simulate(n, N, mr, pn, pr, tbased, init.ties, 2)
 beep()
 
-b=0.032
+b=0.01
 # Values for b (add 0 and remove 1):
 prseq=(c(10^-(seq(0,2,by=0.25)),0))
 prseq=round(prseq[order(prseq)],digits=3)
-res.arr.k3=array(list(),c(10,10,100))
+res.arr.k1=array(list(),c(10,10,100))
 TRY: array(list(NULL), c(10,100))
 for (a in 1:10){
 #  for (b in seq(from=0,to=0.9,by=0.1)){
     for (iter in 1:100){
       cat(sprintf("%d %d\n", a, iter))
       res = simulate(n, N, mr, (a/10)-0.1, b, tbased, init.ties,kill.method=2)
-      res.arr.k3[[a]][[1]][[iter]]=res
+      res.arr.k1[[a]][[1]][[iter]]=res
     }
 #  }
 }
@@ -240,10 +266,11 @@ axis(1,at=1:10,labels=seq(from=0,to=0.9,by=0.1))
 ac=acf(res.arr[[10]][[1]][[1]]["assort"][[1]],lag.max=100)
 
 # Continuous trait coloring
-cols=color.scale(res.arr[[1]][[1]][[1]]["trait"][[1]],cs1=1)
-t=res.arr[[1]][[1]][[5]]["trait"][[1]]
+newnet=network(res.arr.k1[[8]][[1]][[100]]["m"][[1]],directed=F)
+#cols=color.scale(res.arr[[1]][[1]][[1]]["trait"][[1]],cs1=1)
+t=res.arr.k1[[8]][[1]][[100]]["trait"][[1]]
 cols = rainbow(length(t))[rank(t)]
-plot(res.arr.k2[[5]][[1]][[5]]["newnet"][[1]],displayisolates=T,vertex.col=cols,edge.col="black",vertex.border="black")
+plot(newnet,displayisolates=T,vertex.col=cols,edge.col="black",vertex.border="black")
 
 par(mfrow=c(3,4),mar=c(1,1,1,1))
 for (i in 1:10){
