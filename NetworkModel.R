@@ -5,34 +5,10 @@ library("beepr")
 library("plotrix")
 library("Matrix")
 
-code <- '
-#include <Rcpp.h>
-// [[Rcpp::export]]
-int test()
-{
- Rprintf("It worked!");
- return 0;
-}
-'
-sourceCpp(code=code)
-invisible(test())
 
-code3 <- '
-#include <numeric>
-#include <Rcpp.h>
-using namespace Rcpp;
-
-// [[Rcpp::export]]
-double sum4(NumericVector x) {
-  return std::accumulate(x.begin(), x.end(), 0.0);
-}
-'
-sourceCpp(code=code3)
-invisible(test())
-
-
-N=50 # number of individuals
+N=62 # number of individuals
 E=1 # environmental factor. Will make ties more likely if higher
+b=0.333 # probability to not connect to mother when born
 pn=0.7 # probability to connect to friend of mother
 pr=0.01 # probability to connect to random individual
 r=0.5
@@ -43,7 +19,7 @@ tthre=0.05 # trait similarity threshold. More likely to connect if difference be
 tbased = 0 # should connection be based on trait similarity
 init.ties=0.1 # density of initial network
 
-simulate = function(n, N, mr, pn, pr, tbased, init.ties, kill.method=1){
+simulate = function(n, N, mr, b, pn, pr, tbased, init.ties, kill.method=1){
   # Initializing
   init=sample(0:1,N*N,replace=T,prob=c(1-init.ties,init.ties)) # start from random graph
   m=matrix(init, ncol=N,nrow=N)
@@ -67,8 +43,10 @@ simulate = function(n, N, mr, pn, pr, tbased, init.ties, kill.method=1){
     #vec=rep(0,N+1)
     m=cbind(m,vec)
     m=rbind(m,vec)
-    m[mother,N+1]=1
-    m[N+1,mother]=1
+    if (runif(1) > b){
+      m[mother,N+1]=1
+      m[N+1,mother]=1
+    }
     trait=c(trait,trait[mother])
     if (sample(1:mr,1)==1){ # mutation happens
       #trait[N+1]=i+N
@@ -127,8 +105,12 @@ simulate = function(n, N, mr, pn, pr, tbased, init.ties, kill.method=1){
   res
 }
 
-res=simulate(n, N, mr, pn, pr, tbased, init.ties, 2)
+sim.res=simulate(n, N, mr, pn, pr, tbased, init.ties, 2)
 beep()
+
+sim.res=simulate(n, 47, mr, 0.7, 0, tbased, 0.2, 2)
+sim.net=graph.adjacency(sim.res$m,mode="undirected")
+
 
 b=0.01
 # Values for b (add 0 and remove 1):
@@ -265,12 +247,16 @@ axis(1,at=1:10,labels=seq(from=0,to=0.9,by=0.1))
 # Autocorrelation
 ac=acf(res.arr[[10]][[1]][[1]]["assort"][[1]],lag.max=100)
 
+i=15
 # Continuous trait coloring
-newnet=network(res.arr.k1[[8]][[1]][[100]]["m"][[1]],directed=F)
+newnet=network(res.arr.k1[[8]][[1]][[i]]["m"][[1]],directed=F)
 #cols=color.scale(res.arr[[1]][[1]][[1]]["trait"][[1]],cs1=1)
-t=res.arr.k1[[8]][[1]][[100]]["trait"][[1]]
+t=res.arr.k1[[8]][[1]][[i]]["trait"][[1]]
 cols = rainbow(length(t))[rank(t)]
-plot(newnet,displayisolates=T,vertex.col=cols,edge.col="black",vertex.border="black")
+plot(newnet,displayisolates=T,vertex.col=cols,edge.col="black",vertex.border="black",vertex.cex=3)
+im=res.arr.k1[[8]][[1]][[i]]["m"][[1]]
+newneti=graph.adjacency(im,mode="undirected")
+assortativity(newneti,t,directed=F)
 
 par(mfrow=c(3,4),mar=c(1,1,1,1))
 for (i in 1:10){
