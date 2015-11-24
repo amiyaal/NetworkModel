@@ -1,0 +1,546 @@
+*Vertices 100
+1  "1930" ic Red fos 10
+2  "2063" ic Red fos 10
+3  "2087" ic Red fos 10
+4  "2093" ic Red fos 10
+5  "1994" ic Red fos 10
+6  "2041" ic Red fos 10
+7  "1919" ic Red fos 10
+8  "2037" ic Red fos 10
+9  "2011" ic Red fos 10
+10  "2064" ic Red fos 10
+11  "1962" ic Red fos 10
+12  "1802" ic Red fos 10
+13  "2079" ic Red fos 10
+14  "1599" ic Red fos 10
+15  "1976" ic Red fos 10
+16  "1959" ic Red fos 10
+17  "2094" ic Red fos 10
+18  "2033" ic Red fos 10
+19  "2012" ic Red fos 10
+20  "2092" ic Red fos 10
+21  "1897" ic Red fos 10
+22  "1917" ic Red fos 10
+23  "1967" ic Red fos 10
+24  "2050" ic Red fos 10
+25  "2009" ic Red fos 10
+26  "2019" ic Red fos 10
+27  "2068" ic Red fos 10
+28  "1936" ic Red fos 10
+29  "1741" ic Red fos 10
+30  "2021" ic Red fos 10
+31  "1991" ic Red fos 10
+32  "1839" ic Red fos 10
+33  "2075" ic Red fos 10
+34  "1966" ic Red fos 10
+35  "2085" ic Red fos 10
+36  "1896" ic Red fos 10
+37  "2001" ic Red fos 10
+38  "2084" ic Red fos 10
+39  "2002" ic Red fos 10
+40  "1767" ic Red fos 10
+41  "2098" ic Red fos 10
+42  "2040" ic Red fos 10
+43  "2076" ic Red fos 10
+44  "2067" ic Red fos 10
+45  "1982" ic Red fos 10
+46  "2070" ic Red fos 10
+47  "2034" ic Red fos 10
+48  "2097" ic Red fos 10
+49  "2062" ic Red fos 10
+50  "1933" ic Red fos 10
+51  "2036" ic Red fos 10
+52  "2091" ic Red fos 10
+53  "2054" ic Red fos 10
+54  "2074" ic Red fos 10
+55  "2083" ic Red fos 10
+56  "1866" ic Red fos 10
+57  "2018" ic Red fos 10
+58  "2055" ic Red fos 10
+59  "1908" ic Red fos 10
+60  "2032" ic Red fos 10
+61  "2072" ic Red fos 10
+62  "2077" ic Red fos 10
+63  "2065" ic Red fos 10
+64  "1984" ic Red fos 10
+65  "2088" ic Red fos 10
+66  "1898" ic Red fos 10
+67  "2023" ic Red fos 10
+68  "1883" ic Red fos 10
+69  "2038" ic Red fos 10
+70  "2086" ic Red fos 10
+71  "2099" ic Red fos 10
+72  "2014" ic Red fos 10
+73  "1916" ic Red fos 10
+74  "1913" ic Red fos 10
+75  "2039" ic Red fos 10
+76  "1950" ic Red fos 10
+77  "2015" ic Red fos 10
+78  "2046" ic Red fos 10
+79  "2003" ic Red fos 10
+80  "2042" ic Red fos 10
+81  "1918" ic Red fos 10
+82  "1981" ic Red fos 10
+83  "2082" ic Red fos 10
+84  "1993" ic Red fos 10
+85  "2030" ic Red fos 10
+86  "2049" ic Red fos 10
+87  "2081" ic Red fos 10
+88  "2095" ic Red fos 10
+89  "2027" ic Red fos 10
+90  "2061" ic Red fos 10
+91  "1952" ic Red fos 10
+92  "2078" ic Red fos 10
+93  "2096" ic Red fos 10
+94  "1925" ic Red fos 10
+95  "2007" ic Red fos 10
+96  "2029" ic Red fos 10
+97  "1995" ic Red fos 10
+98  "1806" ic Red fos 10
+99  "2017" ic Red fos 10
+100  "2044" ic Red fos 10
+*Edges 444
+1 50 1 c Black
+1 37 1 c Black
+1 39 1 c Black
+1 30 1 c Black
+1 67 1 c Black
+1 89 1 c Black
+1 51 1 c Black
+1 69 1 c Black
+1 2 1 c Black
+1 46 1 c Black
+1 54 1 c Black
+1 3 1 c Black
+1 17 1 c Black
+2 44 1 c Black
+2 52 1 c Black
+3 4 1 c Black
+3 17 1 c Black
+3 71 1 c Black
+5 5 1 c Black
+5 85 1 c Black
+5 47 1 c Black
+5 78 1 c Black
+5 86 1 c Black
+5 58 1 c Black
+5 2 1 c Black
+5 61 1 c Black
+5 65 1 c Black
+6 24 1 c Black
+6 17 1 c Black
+7 16 1 c Black
+7 15 1 c Black
+7 45 1 c Black
+7 26 1 c Black
+7 85 1 c Black
+7 60 1 c Black
+7 78 1 c Black
+7 10 1 c Black
+7 55 1 c Black
+7 65 1 c Black
+8 42 1 c Black
+8 80 1 c Black
+8 4 1 c Black
+8 41 1 c Black
+9 67 1 c Black
+9 6 1 c Black
+9 24 1 c Black
+9 52 1 c Black
+9 88 1 c Black
+9 41 1 c Black
+10 87 1 c Black
+11 45 1 c Black
+11 77 1 c Black
+11 85 1 c Black
+12 73 1 c Black
+12 94 1 c Black
+12 1 1 c Black
+12 15 1 c Black
+12 82 1 c Black
+12 57 1 c Black
+12 67 1 c Black
+12 18 1 c Black
+12 24 1 c Black
+12 70 1 c Black
+12 20 1 c Black
+14 81 1 c Black
+14 39 1 c Black
+14 47 1 c Black
+14 78 1 c Black
+14 61 1 c Black
+14 52 1 c Black
+15 79 1 c Black
+15 19 1 c Black
+15 88 1 c Black
+16 5 1 c Black
+16 95 1 c Black
+16 26 1 c Black
+16 53 1 c Black
+16 90 1 c Black
+16 49 1 c Black
+16 92 1 c Black
+18 33 1 c Black
+18 13 1 c Black
+18 48 1 c Black
+18 71 1 c Black
+19 72 1 c Black
+19 77 1 c Black
+19 30 1 c Black
+19 53 1 c Black
+19 63 1 c Black
+19 54 1 c Black
+19 62 1 c Black
+19 87 1 c Black
+19 65 1 c Black
+19 52 1 c Black
+20 93 1 c Black
+21 81 1 c Black
+21 19 1 c Black
+21 24 1 c Black
+21 58 1 c Black
+21 65 1 c Black
+21 71 1 c Black
+22 23 1 c Black
+22 45 1 c Black
+22 51 1 c Black
+22 44 1 c Black
+22 43 1 c Black
+22 92 1 c Black
+22 55 1 c Black
+22 38 1 c Black
+22 17 1 c Black
+22 48 1 c Black
+23 95 1 c Black
+23 46 1 c Black
+23 83 1 c Black
+23 35 1 c Black
+24 53 1 c Black
+24 70 1 c Black
+24 52 1 c Black
+25 19 1 c Black
+25 85 1 c Black
+25 51 1 c Black
+25 46 1 c Black
+25 33 1 c Black
+26 54 1 c Black
+26 87 1 c Black
+26 41 1 c Black
+27 38 1 c Black
+28 37 1 c Black
+28 79 1 c Black
+28 67 1 c Black
+28 51 1 c Black
+28 24 1 c Black
+28 90 1 c Black
+28 46 1 c Black
+29 36 1 c Black
+29 37 1 c Black
+29 57 1 c Black
+29 87 1 c Black
+29 88 1 c Black
+29 71 1 c Black
+30 47 1 c Black
+30 42 1 c Black
+31 37 1 c Black
+31 90 1 c Black
+31 49 1 c Black
+31 54 1 c Black
+31 43 1 c Black
+31 41 1 c Black
+32 56 1 c Black
+32 22 1 c Black
+32 11 1 c Black
+32 77 1 c Black
+32 63 1 c Black
+32 33 1 c Black
+32 87 1 c Black
+32 3 1 c Black
+32 93 1 c Black
+33 71 1 c Black
+34 79 1 c Black
+34 67 1 c Black
+34 96 1 c Black
+34 85 1 c Black
+34 100 1 c Black
+34 86 1 c Black
+34 24 1 c Black
+34 49 1 c Black
+35 20 1 c Black
+36 22 1 c Black
+36 11 1 c Black
+36 6 1 c Black
+36 46 1 c Black
+36 54 1 c Black
+36 83 1 c Black
+36 71 1 c Black
+37 37 1 c Black
+37 19 1 c Black
+37 57 1 c Black
+37 26 1 c Black
+37 38 1 c Black
+37 4 1 c Black
+37 88 1 c Black
+38 41 1 c Black
+39 25 1 c Black
+39 72 1 c Black
+39 77 1 c Black
+39 42 1 c Black
+39 49 1 c Black
+39 62 1 c Black
+39 87 1 c Black
+39 52 1 c Black
+39 20 1 c Black
+39 4 1 c Black
+39 48 1 c Black
+39 41 1 c Black
+40 32 1 c Black
+40 76 1 c Black
+40 23 1 c Black
+40 45 1 c Black
+40 67 1 c Black
+40 100 1 c Black
+40 43 1 c Black
+42 90 1 c Black
+44 13 1 c Black
+44 41 1 c Black
+45 9 1 c Black
+45 2 1 c Black
+45 46 1 c Black
+45 62 1 c Black
+46 13 1 c Black
+46 83 1 c Black
+47 41 1 c Black
+48 41 1 c Black
+49 63 1 c Black
+49 44 1 c Black
+49 87 1 c Black
+49 55 1 c Black
+50 25 1 c Black
+50 72 1 c Black
+50 67 1 c Black
+50 89 1 c Black
+50 6 1 c Black
+50 53 1 c Black
+50 33 1 c Black
+50 13 1 c Black
+50 83 1 c Black
+51 42 1 c Black
+51 44 1 c Black
+51 87 1 c Black
+51 55 1 c Black
+51 52 1 c Black
+52 4 1 c Black
+52 48 1 c Black
+53 49 1 c Black
+53 46 1 c Black
+54 55 1 c Black
+54 38 1 c Black
+54 88 1 c Black
+55 17 1 c Black
+55 41 1 c Black
+56 82 1 c Black
+56 64 1 c Black
+56 57 1 c Black
+56 85 1 c Black
+56 69 1 c Black
+56 58 1 c Black
+56 62 1 c Black
+57 96 1 c Black
+57 46 1 c Black
+57 33 1 c Black
+57 20 1 c Black
+57 17 1 c Black
+58 55 1 c Black
+58 4 1 c Black
+58 93 1 c Black
+59 5 1 c Black
+59 57 1 c Black
+59 80 1 c Black
+59 65 1 c Black
+60 47 1 c Black
+60 42 1 c Black
+60 83 1 c Black
+60 4 1 c Black
+60 17 1 c Black
+61 41 1 c Black
+62 87 1 c Black
+62 52 1 c Black
+62 4 1 c Black
+62 41 1 c Black
+64 19 1 c Black
+64 47 1 c Black
+64 86 1 c Black
+64 2 1 c Black
+64 10 1 c Black
+64 61 1 c Black
+64 83 1 c Black
+64 88 1 c Black
+65 41 1 c Black
+66 76 1 c Black
+66 91 1 c Black
+66 31 1 c Black
+66 99 1 c Black
+66 26 1 c Black
+66 47 1 c Black
+66 42 1 c Black
+66 80 1 c Black
+66 49 1 c Black
+66 88 1 c Black
+67 47 1 c Black
+67 80 1 c Black
+67 10 1 c Black
+67 46 1 c Black
+67 92 1 c Black
+67 55 1 c Black
+67 70 1 c Black
+68 16 1 c Black
+68 11 1 c Black
+68 84 1 c Black
+68 99 1 c Black
+68 30 1 c Black
+68 89 1 c Black
+68 69 1 c Black
+68 46 1 c Black
+68 83 1 c Black
+68 55 1 c Black
+69 10 1 c Black
+69 4 1 c Black
+69 93 1 c Black
+70 52 1 c Black
+72 51 1 c Black
+72 8 1 c Black
+72 75 1 c Black
+72 46 1 c Black
+72 62 1 c Black
+72 92 1 c Black
+73 19 1 c Black
+73 77 1 c Black
+73 96 1 c Black
+73 85 1 c Black
+73 18 1 c Black
+73 51 1 c Black
+73 2 1 c Black
+73 46 1 c Black
+73 17 1 c Black
+74 8 1 c Black
+74 6 1 c Black
+74 24 1 c Black
+74 53 1 c Black
+74 43 1 c Black
+75 75 1 c Black
+75 13 1 c Black
+75 38 1 c Black
+75 20 1 c Black
+76 91 1 c Black
+76 31 1 c Black
+76 18 1 c Black
+76 80 1 c Black
+76 86 1 c Black
+76 46 1 c Black
+77 96 1 c Black
+77 86 1 c Black
+77 90 1 c Black
+77 2 1 c Black
+77 35 1 c Black
+77 70 1 c Black
+77 88 1 c Black
+78 90 1 c Black
+78 87 1 c Black
+78 35 1 c Black
+78 3 1 c Black
+78 20 1 c Black
+79 30 1 c Black
+79 85 1 c Black
+79 38 1 c Black
+79 35 1 c Black
+80 86 1 c Black
+80 10 1 c Black
+80 88 1 c Black
+81 94 1 c Black
+81 39 1 c Black
+81 51 1 c Black
+81 70 1 c Black
+81 65 1 c Black
+82 39 1 c Black
+82 72 1 c Black
+82 67 1 c Black
+82 83 1 c Black
+82 41 1 c Black
+83 93 1 c Black
+84 69 1 c Black
+84 58 1 c Black
+84 93 1 c Black
+85 47 1 c Black
+85 2 1 c Black
+85 27 1 c Black
+85 13 1 c Black
+85 88 1 c Black
+86 92 1 c Black
+86 13 1 c Black
+86 65 1 c Black
+86 41 1 c Black
+87 20 1 c Black
+87 88 1 c Black
+89 18 1 c Black
+89 10 1 c Black
+89 33 1 c Black
+89 92 1 c Black
+89 41 1 c Black
+89 71 1 c Black
+90 35 1 c Black
+91 9 1 c Black
+91 100 1 c Black
+91 53 1 c Black
+91 49 1 c Black
+91 46 1 c Black
+91 70 1 c Black
+91 17 1 c Black
+92 87 1 c Black
+92 38 1 c Black
+92 3 1 c Black
+92 48 1 c Black
+93 93 1 c Black
+94 45 1 c Black
+94 78 1 c Black
+94 58 1 c Black
+94 54 1 c Black
+94 33 1 c Black
+94 43 1 c Black
+94 92 1 c Black
+94 4 1 c Black
+94 93 1 c Black
+95 25 1 c Black
+95 80 1 c Black
+95 100 1 c Black
+95 20 1 c Black
+96 75 1 c Black
+96 24 1 c Black
+96 27 1 c Black
+96 61 1 c Black
+96 33 1 c Black
+96 92 1 c Black
+97 97 1 c Black
+97 25 1 c Black
+97 89 1 c Black
+97 65 1 c Black
+98 73 1 c Black
+98 23 1 c Black
+98 84 1 c Black
+98 39 1 c Black
+98 72 1 c Black
+98 47 1 c Black
+98 10 1 c Black
+98 92 1 c Black
+98 93 1 c Black
+98 41 1 c Black
+99 99 1 c Black
+99 85 1 c Black
+99 51 1 c Black
+99 80 1 c Black
+99 24 1 c Black
+99 10 1 c Black
+99 52 1 c Black
+99 41 1 c Black
+100 55 1 c Black
+100 20 1 c Black
