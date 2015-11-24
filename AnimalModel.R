@@ -1,8 +1,13 @@
 library(MCMCglmm)
 library(plyr)
 
+# function that adds letter representing the network number to each individual's name
+add.letter=function(x){paste0(letters[i],x)}
+
 pedigree = data.frame(animal=NA,sire=NA,dam=NA)
 data.all=data.frame(degree=NA,cc=NA,betweenness=NA,animal=NA,network=NA,mother=NA)
+
+# Generating pedigree of founders
 for (i in 1:10) {
   pedigree.temp = data.frame(animal=0:99,sire=NA,dam=NA)
   for (j in 1:100) {
@@ -11,12 +16,14 @@ for (i in 1:10) {
   pedigree=rbind(pedigree,pedigree.temp)
 }
 
+type = c("AnimalModel1","AnimalModelRandom") # You have to set the type in the 2 filename rows below to type[1] or type[2]
+# Generating data set
 for (i in 1:10){
-  filename=paste0("~/Dropbox/Erol/Cpp/Snap/examples/testgraph/AnimalModel1/Matrix",i,".csv")
+  filename=paste0("~/Dropbox/Erol/Cpp/Snap/examples/testgraph/",type[1],"/Matrix",i,".csv")
   inet=read_graph(filename,format = "pajek")
   inet=simplify(inet)
   V(inet)$name=V(inet)$id
-  parentsfile=paste0("~/Dropbox/Erol/Cpp/Snap/examples/testgraph/AnimalModel1/Parents",i,".csv")
+  parentsfile=paste0("~/Dropbox/Erol/Cpp/Snap/examples/testgraph/",type[1],"/Parents",i,".csv")
   parents <- read.csv(parentsfile, header=FALSE, sep=";", stringsAsFactors=FALSE)
   parents=data.frame(apply(parents,c(1,2),add.letter))
   colnames(parents)=c("animal","dam","sire")
@@ -36,15 +43,13 @@ for (i in 1:10){
 pedigree=pedigree[-1,]
 data.all=data.all[-1,]
 
+# Storing data
 data.all.08=data.all
 pedigree.08=pedigree
 data.all.rnd=data.all
 pedigree.rnd=pedigree
 
-
-
-add.letter=function(x){paste0(letters[i],x)}
-
+# run model
 prior <- list(R = list(V = 1, nu = 1), G = list(G1=list(V=1,nu=1,alpha.mu=0,alpha.V=1000),
                                                 G2=list(V=1,nu=1,alpha.mu=0,alpha.V=1000),
                                                 G3=list(V=1,nu=1,alpha.mu=0,alpha.V=1000)))
@@ -52,15 +57,30 @@ model1.deg <- MCMCglmm(degree ~ 1, random = ~animal + network + mother, family =
                        prior = prior, pedigree = pedigree, data = data.all, nitt = 60000,
                        burnin = 10000, thin = 10)
 
+# store model
 model.rnd.deg2=model1.deg
 model.08.deg=model1.deg
 
+# check model
+plot(model1.deg$Sol)
+plot(model1.deg$VCV)
+effectiveSize(model1.deg$Sol)
+effectiveSize(model1.deg$VCV)
+autocorr.diag(model1.deg$VCV)
+heidel.diag(model1.deg$VCV)
+summary(model1.deg)
+
+# analyze heritability
 herit.deg.08 <- model1.deg$VCV[, "animal"]/(model1.deg$VCV[, "animal"] + model1.deg$VCV[, "units"] + 
                                          model1.deg$VCV[, "network"]+ model1.deg$VCV[, "mother"])
+effectiveSize(herit.deg.08)
 mean(herit.deg.08)
-HPDinterval(heritEC2)
-plot(heritEC2)
+HPDinterval(herit.deg.08)
+plot(herit.deg.08)
 
+
+#=======================
+# Old:
 i=1
 filename=paste0("~/Dropbox/Erol/Cpp/Snap/examples/testgraph/AnimalModelRandom/Matrix",i,".csv")
 inet=read_graph(filename,format = "pajek")
